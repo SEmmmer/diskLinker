@@ -12,3 +12,7 @@ Cargo.lock
 .idea/
 
 *.xml
+
+#Added by cargo
+
+/target
