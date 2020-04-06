@@ -1,13 +1,19 @@
-use std::env;
-use std::fs;
+use std::io::{Write, Read};
 
 fn main() {
-    let mut source_dir = String::from("/Volumes/Macintosh HD/Users/yangjinghua/Downloads/disk_linker");
-    let target_dir = "/Volumes/milk_tea/disk_linker";
-    let mut filename = source_dir.push_str("/test.PNG");
+    let filepath = String::from("/Volumes/Macintosh HD/Users/yangjinghua/Downloads/disk_linker/test.PNG");
 
-    // println!("{}", filename);
+    let mut file = std::fs::File::open(filepath).unwrap();
 
-    let file = std::fs::File::open("/Volumes/Macintosh HD/Users/yangjinghua/Downloads/disk_linker/test.PNG").unwrap();
+    let mut new_file = std::fs::File::create("data.PNG").expect("create failed");
+
     println!("文件打开成功：{:?}", file);
+
+    let mut buffer = [0u8];
+
+    loop {
+        let bytes = file.read(&mut buffer).unwrap();
+        new_file.write(&buffer[..bytes]).unwrap();
+        if bytes < buffer.len() { break; }
+    }
 }
