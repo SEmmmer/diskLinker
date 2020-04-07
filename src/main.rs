@@ -23,10 +23,16 @@ fn md5_code(file: &mut std::fs::File) -> String {
     hasher.result_str()
 }
 
+fn exists(file: String) -> bool {
+    std::fs::metadata(file).is_ok()
+}
+
 fn same_file(str1: String, str2: String) -> bool {
     let mut file1 = std::fs::File::open(str1).unwrap();
-    let mut file2 = std::fs::File::open(str2).unwrap();
-    if md5_code(&mut file1) == md5_code(&mut file2) { true } else { false }
+    if !exists(str2.clone()) { false } else {
+        let mut file2 = std::fs::File::open(str2).unwrap();
+        if md5_code(&mut file1) == md5_code(&mut file2) { true } else { false }
+    }
 }
 
 fn copy_file(source_file: String, target_file: String) {
@@ -43,7 +49,9 @@ fn copy_file(source_file: String, target_file: String) {
     loop {
         let bytes = old_file.read(&mut buffer).unwrap();
         new_file.write(&buffer[..bytes]).unwrap();
-        if bytes < buffer.len() { break; }
+        if bytes < buffer.len() {
+            break;
+        }
     }
     println!("===== copy over =====");
 }
